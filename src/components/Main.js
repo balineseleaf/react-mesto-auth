@@ -2,6 +2,7 @@ import editAvatar from "../images/editavatar.svg";
 import React from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 import Card from "./Card";
+import Footer from "./Footer";
 
 const Main = (props) => {
   const {
@@ -57,11 +58,11 @@ const Main = (props) => {
             onCardLike={onCardLike}
             onCardClick={onCardClick}
             onCardDelete={onCardDelete}
-            //isOpen={isOpen}
             card={item}
           />
         ))}
       </section>
+      <Footer />
     </main>
   );
 };

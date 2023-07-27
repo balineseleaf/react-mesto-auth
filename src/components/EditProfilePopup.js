@@ -3,7 +3,7 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 import PopupWithForm from "./PopupWithForm";
 
 const EditProfilePopup = (props) => {
-  const { isOpen, onClose, onUpdateUser } = props;
+  const { isOpen, onClose, onUpdateUser, isLoading } = props;
   const currentUser = React.useContext(CurrentUserContext);
   const [name, setName] = React.useState("");
   const [description, setDescription] = React.useState("");
@@ -39,7 +39,7 @@ const EditProfilePopup = (props) => {
       name={"edit-profile"}
       isOpen={isOpen}
       onClose={onClose}
-      buttonText={"Сохранить"}
+      buttonText={isLoading ? "Сохранение..." : "Сохранить"}
       onSubmit={handleSubmit}
     >
       <fieldset className="popup__fieldset">
