@@ -1,11 +1,10 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Register = (props) => {
   const { onRegister } = props;
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const navigate = useNavigate();
 
   function handleEmailChange(evt) {
     setEmail(evt.target.value);
@@ -17,11 +16,7 @@ const Register = (props) => {
 
   function handleSubmit(e) {
     e.preventDefault();
-    onRegister(email, password)
-      .then(() => navigate("/sign-in"))
-      .catch((err) => {
-        console.log(err);
-      });
+    onRegister(email, password);
   }
 
   return (

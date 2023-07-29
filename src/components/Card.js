@@ -38,7 +38,6 @@ const Card = (props) => {
           className="element__delete-card-button"
           type="button"
           onClick={handleDeleteClick}
-          //isOpen={card.isOpen}
         />
       )}
       <img

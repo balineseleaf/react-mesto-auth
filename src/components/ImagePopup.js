@@ -1,9 +1,9 @@
+import { usePopupClose } from "../hooks/usePopupClose.js";
 const ImagePopup = (props) => {
   const { onClose, isOpen, card } = props;
-  // props: сначала пустой массив card,
-  // а после клика с данными выбранной карточки
-  // потому что в App.js у нас пропс стоит card={selectedCard}
-  // после закрытия зумпопапа - снова пустой массив - так работает сеттер
+
+  usePopupClose(isOpen, onClose); // кастомный хук
+
   return (
     <section className={`popup ${isOpen ? "popup_opened" : ""}`}>
       <div className="popup__image-container">

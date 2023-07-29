@@ -10,13 +10,7 @@ export const register = (email, password) => {
       email,
       password,
     }),
-  }).then((response) => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      return Promise.reject(`Ошибка ${response.status}`);
-    }
-  });
+  }).then(handleResponse);
 };
 
 export const login = (email, password) => {
@@ -29,13 +23,7 @@ export const login = (email, password) => {
       password,
       email,
     }),
-  }).then((response) => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      return Promise.reject(`Ошибка ${response.status}`);
-    }
-  });
+  }).then(handleResponse);
 };
 
 export const checkToken = (token) => {
@@ -45,11 +33,13 @@ export const checkToken = (token) => {
       "Content-Type": "application/json",
       authorization: `Bearer ${token}`,
     },
-  }).then((response) => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      return Promise.reject(`Ошибка ${response.status}`);
-    }
-  });
+  }).then(handleResponse);
+};
+
+const handleResponse = (res) => {
+  if (res.ok) {
+    return res.json();
+  } else {
+    return Promise.reject(`Ошибка ${res.status}`);
+  }
 };

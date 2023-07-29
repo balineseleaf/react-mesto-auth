@@ -1,6 +1,10 @@
+import { usePopupClose } from "../hooks/usePopupClose.js";
+
 const PopupWithForm = (props) => {
-  // name - это пропс в App.js  у компонента формы
   const { isOpen, onClose, onSubmit, buttonText } = props; // если нам пришло true из App.js после отработки ф-ии handle... , то здесь мы уже добавляем класс с открытым попапом
+
+  usePopupClose(isOpen, onClose);
+
   return (
     <section
       className={`popup popup_type_${props.name} ${

@@ -1,5 +1,4 @@
 import React from "react";
-// import PopupWithForm from "./PopupWithForm";
 
 const InfoToolTip = ({ onClose, isOpen, isSuccess }) => {
   return (

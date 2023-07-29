@@ -1,10 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
-const Login = ({ onLogin, isLoggedIn }) => {
+const Login = ({ onLogin }) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const navigate = useNavigate();
 
   function handleEmailChange(evt) {
     setEmail(evt.target.value);
@@ -16,11 +14,7 @@ const Login = ({ onLogin, isLoggedIn }) => {
 
   function handleSubmit(e) {
     e.preventDefault();
-    onLogin(email, password)
-      .then(() => navigate("/"))
-      .catch((err) => {
-        console.log(err);
-      });
+    onLogin(email, password);
   }
 
   return (
