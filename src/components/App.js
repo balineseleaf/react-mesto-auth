@@ -187,7 +187,7 @@ function App() {
       .then((res) => {
         if (res) {
           setSuccessRegistration(true); // успешный вход
-          navigate("/sing-in");
+          navigate("/sign-in");
         }
       })
       .catch((err) => {
