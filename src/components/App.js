@@ -10,32 +10,41 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext"; // импо
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import * as auth from "../utils/auth.js";
-//import { checkToken } from "../utils/auth.js";
 import Login from "./Login";
 import Register from "./Register";
 import InfoToolTip from "./InfoToolTip";
 
 function App() {
   const [cards, setCards] = React.useState([]);
+
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
     React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
+
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
     React.useState(false);
+
   const [selectedCard, setSelectedCard] = React.useState({});
+
   const [isImagePopupOpen, setImagePopupOpen] = React.useState(false);
+
   const [currentUser, setCurrentUser] = React.useState({});
 
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
   const [isSuccessPopupOpen, setIsSuccessPopupOpen] = React.useState(false); // попап с рез-том после регистрации
   // email
   const [headerEmail, setHeaderEmail] = React.useState("");
+
   const [isInfoToolTipSuccess, setIsInfoToolTipSuccess] = React.useState(false);
-  // текст кнопки
+
   const [isLoadingUpdateUser, setIsLoadingUpdateUser] = React.useState(false);
+
   const [isLoadingUpdateAvatar, setIsLoadingUpdateAvatar] =
     React.useState(false);
+
   const [isLoadingAddPlace, setIsLoadingAddPlace] = React.useState(false);
+
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -64,6 +73,50 @@ function App() {
       })
       .catch((err) => console.log(err));
   }, [isLoggedIn]);
+
+  // регистрация пользователя
+  function handleRegisterUser(email, password) {
+    return auth
+      .register(email, password)
+      .then((res) => {
+        if (res) {
+          setIsInfoToolTipSuccess(true); // успешный вход
+          navigate("/sign-in");
+        }
+      })
+      .catch((err) => {
+        setIsInfoToolTipSuccess(false); // fail
+        console.log(err);
+      })
+      .finally(() => setIsSuccessPopupOpen(true)); // в любом случае открываем попап
+  }
+
+  // аутентификация пользователя
+  function handleLoginUser(email, password) {
+    return auth
+      .login(email, password)
+      .then((res) => {
+        if (res.token) {
+          setHeaderEmail(email); // передаем почту
+          setIsLoggedIn(true); // войдено
+          localStorage.setItem("jwt", res.token);
+          navigate("/");
+        }
+      })
+      .catch((err) => {
+        setIsInfoToolTipSuccess(false); // fail
+        setIsSuccessPopupOpen(true); // в любом случае открываем попап
+        console.log(err);
+      });
+  }
+
+  // удаляем токен
+  function handleSingOut() {
+    localStorage.removeItem("jwt");
+    setHeaderEmail(""); // очищаем почту
+    setIsLoggedIn(false); // не войдено
+    navigate("/sign-in");
+  }
 
   // попап редактирования
   function handleEditProfileClick() {
@@ -173,50 +226,6 @@ function App() {
       })
       .catch((err) => console.log(err))
       .finally(() => setIsLoadingAddPlace(false)); //текст кнопки на попапе
-  }
-
-  // регистрация пользователя
-  function handleRegisterUser(email, password) {
-    return auth
-      .register(email, password)
-      .then((res) => {
-        if (res) {
-          setIsInfoToolTipSuccess(true); // успешный вход
-          navigate("/sign-in");
-        }
-      })
-      .catch((err) => {
-        setIsInfoToolTipSuccess(false); // fail
-        console.log(err);
-      })
-      .finally(() => setIsSuccessPopupOpen(true)); // в любом случае открываем попап
-  }
-
-  // аутентификация пользователя
-  function handleLoginUser(email, password) {
-    return auth
-      .login(email, password)
-      .then((res) => {
-        if (res.token) {
-          setHeaderEmail(email); // передаем почту
-          setIsLoggedIn(true); // войдено
-          localStorage.setItem("jwt", res.token);
-          navigate("/");
-        }
-      })
-      .catch((err) => {
-        setIsInfoToolTipSuccess(false); // fail
-        setIsSuccessPopupOpen(true); // в любом случае открываем попап
-        console.log(err);
-      });
-  }
-
-  // удаляем токен
-  function handleSingOut() {
-    localStorage.removeItem("jwt");
-    setHeaderEmail(""); // очищаем почту
-    setIsLoggedIn(false); // не войдено
-    navigate("/sign-in");
   }
 
   return (
