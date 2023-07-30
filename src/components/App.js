@@ -66,12 +66,14 @@ function App() {
   }, []);
 
   React.useEffect(() => {
-    Promise.all([api.getUserData(), api.getInitialCards()])
-      .then(([userData, cards]) => {
-        setCurrentUser(userData);
-        setCards(cards);
-      })
-      .catch((err) => console.log(err));
+    if (isLoggedIn) {
+      Promise.all([api.getUserData(), api.getInitialCards()])
+        .then(([userData, cards]) => {
+          setCurrentUser(userData);
+          setCards(cards);
+        })
+        .catch((err) => console.log(err));
+    }
   }, [isLoggedIn]);
 
   // регистрация пользователя
@@ -80,12 +82,12 @@ function App() {
       .register(email, password)
       .then((res) => {
         if (res) {
-          setIsInfoToolTipSuccess(true); // успешный вход
+          setIsInfoToolTipSuccess(true); // успешная регистрация
           navigate("/sign-in");
         }
       })
       .catch((err) => {
-        setIsInfoToolTipSuccess(false); // fail
+        setIsInfoToolTipSuccess(false); // неудачная регистрация
         console.log(err);
       })
       .finally(() => setIsSuccessPopupOpen(true)); // в любом случае открываем попап
@@ -98,13 +100,13 @@ function App() {
       .then((res) => {
         if (res.token) {
           setHeaderEmail(email); // передаем почту
-          setIsLoggedIn(true); // войдено
+          setIsLoggedIn(true); // вошли
           localStorage.setItem("jwt", res.token);
           navigate("/");
         }
       })
       .catch((err) => {
-        setIsInfoToolTipSuccess(false); // fail
+        setIsInfoToolTipSuccess(false);
         setIsSuccessPopupOpen(true); // в любом случае открываем попап
         console.log(err);
       });
