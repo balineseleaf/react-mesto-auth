@@ -22,6 +22,6 @@ export const usePopupClose = (isOpen, closeAllPopups) => {
       document.removeEventListener("keydown", handleEscape);
       document.removeEventListener("mousedown", handleOverlay);
     };
-  }, [isOpen, closeAllPopups]); // следим за зависимостями
+  }, [isOpen]); // следим за зависимостями
 };
 export default usePopupClose;

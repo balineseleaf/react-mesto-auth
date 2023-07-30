@@ -30,7 +30,7 @@ function App() {
   const [isSuccessPopupOpen, setIsSuccessPopupOpen] = React.useState(false); // попап с рез-том после регистрации
   // email
   const [headerEmail, setHeaderEmail] = React.useState("");
-  const [successRegistration, setSuccessRegistration] = React.useState(false);
+  const [isInfoToolTipSuccess, setIsInfoToolTipSuccess] = React.useState(false);
   // текст кнопки
   const [isLoadingUpdateUser, setIsLoadingUpdateUser] = React.useState(false);
   const [isLoadingUpdateAvatar, setIsLoadingUpdateAvatar] =
@@ -38,29 +38,15 @@ function App() {
   const [isLoadingAddPlace, setIsLoadingAddPlace] = React.useState(false);
   const navigate = useNavigate();
 
-  // React.useEffect(() => {
-  //   Promise.all([api.getUserData(), api.getInitialCards()])
-  //     .then(([userData, cards]) => {
-  //       setCurrentUser(userData);
-  //       setCards(cards);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, []);
-
   React.useEffect(() => {
     const jwt = localStorage.getItem("jwt");
     if (jwt) {
-      Promise.all([
-        api.getUserData(),
-        api.getInitialCards(),
-        auth.checkToken(jwt),
-      ])
-        .then(([userData, cards, checkData]) => {
-          if (checkData.data) {
+      auth
+        .checkToken(jwt)
+        .then((res) => {
+          if (res.data) {
             navigate("/");
-            setCurrentUser(userData);
-            setCards(cards);
-            setHeaderEmail(checkData.data.email);
+            setHeaderEmail(res.data.email);
             setIsLoggedIn(true);
           } else {
             navigate("/sign-in");
@@ -68,6 +54,15 @@ function App() {
         })
         .catch((err) => console.error(`Ошибка: ${err}`));
     }
+  }, []);
+
+  React.useEffect(() => {
+    Promise.all([api.getUserData(), api.getInitialCards()])
+      .then(([userData, cards]) => {
+        setCurrentUser(userData);
+        setCards(cards);
+      })
+      .catch((err) => console.log(err));
   }, [isLoggedIn]);
 
   // попап редактирования
@@ -186,12 +181,12 @@ function App() {
       .register(email, password)
       .then((res) => {
         if (res) {
-          setSuccessRegistration(true); // успешный вход
+          setIsInfoToolTipSuccess(true); // успешный вход
           navigate("/sign-in");
         }
       })
       .catch((err) => {
-        setSuccessRegistration(false); // fail
+        setIsInfoToolTipSuccess(false); // fail
         console.log(err);
       })
       .finally(() => setIsSuccessPopupOpen(true)); // в любом случае открываем попап
@@ -210,7 +205,7 @@ function App() {
         }
       })
       .catch((err) => {
-        setSuccessRegistration(false); // fail
+        setIsInfoToolTipSuccess(false); // fail
         setIsSuccessPopupOpen(true); // в любом случае открываем попап
         console.log(err);
       });
@@ -291,7 +286,7 @@ function App() {
         <InfoToolTip
           onClose={closeAllPopups}
           isOpen={isSuccessPopupOpen}
-          isSuccess={successRegistration}
+          isSuccess={isInfoToolTipSuccess}
         />
       </div>
     </CurrentUserContext.Provider>
